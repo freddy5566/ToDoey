@@ -28,11 +28,14 @@ class TodoListViewController: UITableViewController{
         navigationItem.rightBarButtonItem = add
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
+        itemArray = defaults.array(forKey: "toDoListArray") as? [String] ?? ["add something"]
+        
     }
     
     // MARK: Model
     
     private var itemArray = ["homework", "math Exam", "workout"]
+    private let defaults = UserDefaults.standard
     
     // MARK: Navigation Item Action
     
@@ -47,6 +50,9 @@ class TodoListViewController: UITableViewController{
             print(textField.text ?? "")
             guard let addString = textField.text else { return }
             self.itemArray.append(addString)
+            
+            self.defaults.set(self.itemArray, forKey: "toDoListArray")
+            
             self.tableView.reloadData()
         }
         
