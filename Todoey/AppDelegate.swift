@@ -22,20 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let window = self.window else { fatalError("no windows") }
        
         let mainNav = UINavigationController(rootViewController: TodoListViewController())
-        
-        let textAttributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)]
-        mainNav.navigationBar.titleTextAttributes = textAttributes
-        
-        mainNav.navigationBar.topItem?.title = "Todoey"
-        
-        mainNav.navigationBar.barTintColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
-        
-        
         window.rootViewController = mainNav
         window.makeKeyAndVisible()
         
         return true
     }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
