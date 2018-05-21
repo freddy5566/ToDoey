@@ -11,7 +11,8 @@ import UIKit
 class TodoListViewController: UITableViewController{
     
     private let cellID = "toDoListCell"
-   
+    private let toDoListArrayKey = "toDoListArrayKey"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,14 +29,26 @@ class TodoListViewController: UITableViewController{
         navigationItem.rightBarButtonItem = add
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
-        itemArray = defaults.array(forKey: "toDoListArray") as? [String] ?? ["add something"]
+        var newItem = Item()
+        newItem.title = "cool"
+        itemArray.append(newItem)
         
     }
     
     // MARK: Model
     
-    private var itemArray = ["homework", "math Exam", "workout"]
-    private let defaults = UserDefaults.standard
+    private var itemArray: [Item] = []
+    private let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
+    
+    private func saveItems() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoging itemArray, \(error)")
+        }
+    }
     
     // MARK: Navigation Item Action
     
@@ -49,9 +62,11 @@ class TodoListViewController: UITableViewController{
             // add new item to item array
             print(textField.text ?? "")
             guard let addString = textField.text else { return }
-            self.itemArray.append(addString)
             
-            self.defaults.set(self.itemArray, forKey: "toDoListArray")
+            self.itemArray.append(Item(title: addString, done: false))
+            
+          
+            self.saveItems()
             
             self.tableView.reloadData()
         }
@@ -75,7 +90,11 @@ class TodoListViewController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+       
+        cell.textLabel?.text = item.title
+    
+        cell.accessoryType = item.done ? .checkmark : .none;
         
         return cell
     }
@@ -83,15 +102,15 @@ class TodoListViewController: UITableViewController{
     // MARK: TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemArray[indexPath.row])
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        saveItems() // update data 
         
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
+    
+
     
 }
