@@ -10,6 +10,8 @@ import UIKit
 
 class TodoListViewController: UITableViewController{
     
+    // MARK: Constant
+    
     private let cellID = "toDoListCell"
     private let toDoListArrayKey = "toDoListArrayKey"
     
@@ -29,9 +31,7 @@ class TodoListViewController: UITableViewController{
         navigationItem.rightBarButtonItem = add
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
-        var newItem = Item()
-        newItem.title = "cool"
-        itemArray.append(newItem)
+        loadItems()
         
     }
     
@@ -46,7 +46,19 @@ class TodoListViewController: UITableViewController{
             let data = try encoder.encode(itemArray)
             try data.write(to: dataFilePath!)
         } catch {
-            print("Error encoging itemArray, \(error)")
+            print("Error encoding itemArray, \(error)")
+        }
+    }
+    
+    private func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            
+            do {
+                itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error decoding itemArray, \(error)")
+            }
         }
     }
     
@@ -104,7 +116,7 @@ class TodoListViewController: UITableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-        saveItems() // update data 
+        saveItems() // update data
         
         tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
