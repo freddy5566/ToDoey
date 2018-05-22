@@ -61,7 +61,7 @@
 				B61BA86A20B07B4800878DA3 /* AppDelegate.swift */,
 				B6D2F03C20B2E53400CC865B /* Supporting Files */,
 				B6FD0A5020B2E41F00063329 /* Model */,
-				B6622B9620B2E3ED00C54885 /* ToDolist */,
+				B6622B9620B2E3ED00C54885 /* ToDoList */,
 				B61BA87C20B07D5400878DA3 /* Utilities */,
 				B61BA87620B07B4800878DA3 /* Info.plist */,
 			);
@@ -76,13 +76,13 @@
 			name = Utilities;
 			sourceTree = "<group>";
 		};
-		B6622B9620B2E3ED00C54885 /* ToDolist */ = {
+		B6622B9620B2E3ED00C54885 /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
 				B61BA87F20B0805800878DA3 /* TodoListViewController.swift */,
 				B63CBA7F20B116C5005826D4 /* ToDoListCell.swift */,
 			);
-			name = ToDolist;
+			name = ToDoList;
 			sourceTree = "<group>";
 		};
 		B6D2F03C20B2E53400CC865B /* Supporting Files */ = {
