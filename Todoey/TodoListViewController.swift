@@ -33,8 +33,8 @@ class TodoListViewController: UITableViewController{
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
         print(dataFilePath)
-        //loadItems()
         
+        loadItems()
     }
     
     // MARK: Model
@@ -54,22 +54,21 @@ class TodoListViewController: UITableViewController{
         tableView.reloadData()
     }
     
-//    private func loadItems() {
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//            let decoder = PropertyListDecoder()
-//
-//            do {
-//                itemArray = try decoder.decode([Item].self, from: data)
-//            } catch {
-//                print("Error decoding itemArray, \(error)")
-//            }
-//        }
-//    }
+    private func loadItems() {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context\(error)")
+        }
+        
+    }
     
     // MARK: Navigation Item Action
     
     @objc private func addTap() {
-       
+        
         var textField = UITextField()
         
         let alert = UIAlertController(title: "Add New Todoey item", message: "", preferredStyle: .alert)
@@ -86,9 +85,9 @@ class TodoListViewController: UITableViewController{
             newItem.done = false
             
             self.itemArray.append(newItem)
-        
+            
             self.saveItems()
-
+            
         }
         
         alert.addTextField { (alertTextField) in
@@ -111,9 +110,9 @@ class TodoListViewController: UITableViewController{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
         let item = itemArray[indexPath.row]
-       
+        
         cell.textLabel?.text = item.title
-    
+        
         cell.accessoryType = item.done ? .checkmark : .none;
         
         return cell
@@ -123,6 +122,7 @@ class TodoListViewController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         saveItems() // update data
         
@@ -131,6 +131,6 @@ class TodoListViewController: UITableViewController{
         
     }
     
-
+    
     
 }
