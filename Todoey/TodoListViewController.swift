@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController{
     
@@ -31,36 +32,39 @@ class TodoListViewController: UITableViewController{
         navigationItem.rightBarButtonItem = add
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
-        loadItems()
+        print(dataFilePath)
+        //loadItems()
         
     }
     
     // MARK: Model
     
     private var itemArray: [Item] = []
-    private let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
+    private let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private func saveItems() {
-        let encoder = PropertyListEncoder()
+        // let encoder = PropertyListEncoder()
         do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+            try context.save()
         } catch {
-            print("Error encoding itemArray, \(error)")
+            print("Error saving context\(error)")
         }
+        
+        tableView.reloadData()
     }
     
-    private func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            
-            do {
-                itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error decoding itemArray, \(error)")
-            }
-        }
-    }
+//    private func loadItems() {
+//        if let data = try? Data(contentsOf: dataFilePath!) {
+//            let decoder = PropertyListDecoder()
+//
+//            do {
+//                itemArray = try decoder.decode([Item].self, from: data)
+//            } catch {
+//                print("Error decoding itemArray, \(error)")
+//            }
+//        }
+//    }
     
     // MARK: Navigation Item Action
     
@@ -73,14 +77,18 @@ class TodoListViewController: UITableViewController{
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // add new item to item array
             print(textField.text ?? "")
+            
             guard let addString = textField.text else { return }
+            if addString == "" { return }
             
-            self.itemArray.append(Item(title: addString, done: false))
+            let newItem = Item(context: self.context)
+            newItem.title = addString
+            newItem.done = false
             
-          
+            self.itemArray.append(newItem)
+        
             self.saveItems()
-            
-            self.tableView.reloadData()
+
         }
         
         alert.addTextField { (alertTextField) in
