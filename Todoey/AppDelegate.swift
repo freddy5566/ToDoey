@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         guard let window = self.window else { fatalError("no windows") }
         
-        let mainNav = UINavigationController(rootViewController: TodoListViewController())
+        let mainNav = UINavigationController(rootViewController: CategoryViewController())
         window.rootViewController = mainNav
         window.makeKeyAndVisible()
         
