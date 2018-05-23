@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TodoListViewController: UITableViewController{
+class TodoListViewController: UITableViewController {
     
     // MARK: Constant
     
@@ -32,7 +32,9 @@ class TodoListViewController: UITableViewController{
         navigationItem.rightBarButtonItem = add
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
-        print(dataFilePath)
+        searchBar.delegate = self
+        
+        //print(dataFilePath)
         
         loadItems()
     }
@@ -54,8 +56,7 @@ class TodoListViewController: UITableViewController{
         tableView.reloadData()
     }
     
-    private func loadItems() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    private func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
         
         do {
             itemArray = try context.fetch(request)
@@ -64,6 +65,15 @@ class TodoListViewController: UITableViewController{
         }
         
     }
+    
+    // MARK: Searching
+    private let searchBar: UISearchBar = {
+        let search = UISearchBar()
+        search.searchBarStyle = UISearchBarStyle.prominent
+        search.placeholder = "Come on search me"
+        search.sizeToFit()
+        return search
+    }()
     
     // MARK: Navigation Item Action
     
@@ -118,7 +128,9 @@ class TodoListViewController: UITableViewController{
         return cell
     }
     
-    // MARK: TableView Delegate Methods
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return searchBar
+    }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -131,6 +143,24 @@ class TodoListViewController: UITableViewController{
         
     }
     
+}
+
+// MARK: SearchBar methods
+
+extension TodoListViewController: UISearchBarDelegate {
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request)
+        tableView.reloadData()
+    }
     
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        return true
+    }
 }
