@@ -24,7 +24,7 @@ class TodoListViewController: UITableViewController {
         let textAttributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         
-        navigationController?.navigationBar.topItem?.title = "items"
+        self.title = "items"
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
         
         let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTap))
@@ -33,8 +33,6 @@ class TodoListViewController: UITableViewController {
         
         navigationItem.rightBarButtonItem = add
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        
-        
         
         searchBar.delegate = self
         
@@ -52,11 +50,17 @@ class TodoListViewController: UITableViewController {
     }()
     
     @IBAction private func backToToDoey(_ sender: UIButton) {
-        let _ = self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     
     // MARK: Model
+    
+    var selectedCategory: Category? {
+        didSet {
+            loadItems()
+        }
+    }
     
     private var itemArray: [Item] = []
     private let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -73,7 +77,17 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    private func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+    private func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
+    
+        guard let name = selectedCategory?.name else { return }
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", name)
+        
+        if let addtionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
         
         do {
             itemArray = try context.fetch(request)
@@ -110,6 +124,7 @@ class TodoListViewController: UITableViewController {
             let newItem = Item(context: self.context)
             newItem.title = addString
             newItem.done = false
+            newItem.parentCategory = self.selectedCategory
             
             self.itemArray.append(newItem)
             
@@ -151,7 +166,6 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         saveItems() // update data
         
@@ -168,13 +182,23 @@ extension TodoListViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let request: NSFetchRequest<Item> = Item.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        loadItems(with: request)
+        loadItems(with: request, predicate: predicate)
         tableView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+                // reset to original page
+                self.loadItems()
+                self.tableView.reloadData()
+            }
+        }
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {

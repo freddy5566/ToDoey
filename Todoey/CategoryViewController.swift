@@ -20,11 +20,11 @@ class CategoryViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.register(CategoryCell.self, forCellReuseIdentifier: cellID)
-      
+        
         let textAttributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         
-        navigationController?.navigationBar.topItem?.title = "Todoey"
+        self.title = "Todoey"
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
         
         let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed))
@@ -35,7 +35,7 @@ class CategoryViewController: UITableViewController {
         loadCategories()
     }
     
-     // MARK: Add New Category
+    // MARK: Add New Category
     
     @objc private func addButtonPressed() {
         var textField = UITextField()
@@ -93,7 +93,7 @@ class CategoryViewController: UITableViewController {
         } catch {
             print("Error fetching data from context\(error)")
         }
-        
+        tableView.reloadData()
     }
     
     // MARK: TableView
@@ -110,6 +110,18 @@ class CategoryViewController: UITableViewController {
         cell.textLabel?.text = category.name
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            let toDo = TodoListViewController()
+            toDo.selectedCategory = categoryArray[indexPath.row]
+            
+            self.navigationController?.pushViewController(toDo, animated: true)
+        }
+        
+        
     }
     
 }
