@@ -24,13 +24,17 @@ class TodoListViewController: UITableViewController {
         let textAttributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         
-        navigationController?.navigationBar.topItem?.title = "Todoey"
+        navigationController?.navigationBar.topItem?.title = "items"
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
         
         let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTap))
         
+        navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
         navigationItem.rightBarButtonItem = add
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        
+        
         
         searchBar.delegate = self
         
@@ -38,6 +42,19 @@ class TodoListViewController: UITableViewController {
         
         loadItems()
     }
+    
+    private let backButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Todoey", for: .normal)
+        button.setTitleColor(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), for: .normal)
+        button.addTarget(self, action: #selector(backToToDoey(_:)), for: .touchDown)
+        return button
+    }()
+    
+    @IBAction private func backToToDoey(_ sender: UIButton) {
+        let _ = self.navigationController?.popViewController(animated: true)
+    }
+    
     
     // MARK: Model
     

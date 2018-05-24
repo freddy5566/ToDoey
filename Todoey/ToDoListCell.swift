@@ -10,9 +10,9 @@ import UIKit
 
 class ToDoListCell: UITableViewCell {
     
-    var toDoitems: String? {
+    var toDoItems: String? {
         didSet {
-            textLabel?.text = toDoitems
+            textLabel?.text = toDoItems
         }
     }
     
