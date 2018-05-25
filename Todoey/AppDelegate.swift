@@ -27,8 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.rootViewController = mainNav
         window.makeKeyAndVisible()
         
+        print(Realm.Configuration.defaultConfiguration.fileURL)
+        
+        let data = Data()
+        
         do {
             let realm = try Realm()
+            try realm.write {
+               
+            }
         } catch {
             print("Error initialising new ealm, \(error)")
         }
