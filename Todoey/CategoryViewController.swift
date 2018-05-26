@@ -70,17 +70,13 @@ class CategoryViewController: UITableViewController {
     
     
     // MARK: Model
-    
-    //private var categoryArray: [Category] = []
+
     private var categoryArray: Results<CategoryRealm>?
     private let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-    //private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
     
     private func save(category: CategoryRealm) {
-        // let encoder = PropertyListEncoder()
         do {
-            // core data way
-            // try context.save()
             try realm.write {
                 realm.add(category)
             }
@@ -94,16 +90,8 @@ class CategoryViewController: UITableViewController {
     private func loadCategories() {
         
         categoryArray = realm.objects(CategoryRealm.self)
-        
-        
-//        do {
-//            categoryArray = try context.fetch(request)
-//        } catch {
-//            print("Error fetching data from context\(error)")
-//        }
+    
         tableView.reloadData()
-        
-        
     }
     
     // MARK: TableView

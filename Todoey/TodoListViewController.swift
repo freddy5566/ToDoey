@@ -54,14 +54,7 @@ class TodoListViewController: UITableViewController {
     
     
     // MARK: Model
-    
-//    var selectedCategory: Category? {
-//        didSet {
-//            loadItems()
-//        }
-//    }
-    
-    
+
     var selectedCategory: CategoryRealm? {
         didSet {
             loadItems()
@@ -160,20 +153,15 @@ class TodoListViewController: UITableViewController {
         if let item = toDoItems?[indexPath.row] {
             do {
                 try realm.write {
-                    //item.done = !item.done
-                    realm.delete(item)
+                    item.done = !item.done
+                    //realm.delete(item)
                 }
                 self.tableView.reloadData()
             } catch {
                 print("Error saving done status, \(error)")
             }
         }
-        
-        
-//        toDoItems?[indexPath.row].done = !toDoItems[indexPath.row].done
-//        saveItems() // update data
-//
-//        tableView.reloadData()
+    
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
