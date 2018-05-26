@@ -160,7 +160,8 @@ class TodoListViewController: UITableViewController {
         if let item = toDoItems?[indexPath.row] {
             do {
                 try realm.write {
-                    item.done = !item.done
+                    //item.done = !item.done
+                    realm.delete(item)
                 }
                 self.tableView.reloadData()
             } catch {
