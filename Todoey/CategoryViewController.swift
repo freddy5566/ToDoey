@@ -54,8 +54,6 @@ class CategoryViewController: UITableViewController {
             let newCategory = CategoryRealm()
             newCategory.name = addString
             
-            self.categoryArray.append(newCategory)
-            
             self.save(category: newCategory)
             
         }
@@ -74,9 +72,9 @@ class CategoryViewController: UITableViewController {
     // MARK: Model
     
     //private var categoryArray: [Category] = []
-    private var categoryArray: [CategoryRealm] = []
+    private var categoryArray: Results<CategoryRealm>?
     private let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    //private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private func save(category: CategoryRealm) {
         // let encoder = PropertyListEncoder()
@@ -93,28 +91,33 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    private func loadCategories(with request: NSFetchRequest<Category> = Category.fetchRequest()) {
+    private func loadCategories() {
+        
+        categoryArray = realm.objects(CategoryRealm.self)
+        
         
 //        do {
 //            categoryArray = try context.fetch(request)
 //        } catch {
 //            print("Error fetching data from context\(error)")
 //        }
-//        tableView.reloadData()
+        tableView.reloadData()
+        
+        
     }
     
     // MARK: TableView
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categoryArray?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        let category = categoryArray[indexPath.row]
+        let category = categoryArray?[indexPath.row]
         
         
-        cell.textLabel?.text = category.name
+        cell.textLabel?.text = category?.name ?? "NO Category Yet"
         
         return cell
     }
@@ -123,7 +126,7 @@ class CategoryViewController: UITableViewController {
         
         if let indexPath = tableView.indexPathForSelectedRow {
             let toDo = TodoListViewController()
-            toDo.selectedCategory = categoryArray[indexPath.row]
+            toDo.selectedCategory = categoryArray?[indexPath.row]
             
             self.navigationController?.pushViewController(toDo, animated: true)
         }
