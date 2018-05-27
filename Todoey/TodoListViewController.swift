@@ -9,11 +9,21 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewControllee {
+    
+    // MARK: init
+    
+    override init(style: UITableViewStyle) {
+        super.init(style: style)
+        cellID = "toDoListCell"
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: Constant
     
-    private let cellID = "toDoListCell"
     private let toDoListArrayKey = "toDoListArrayKey"
     
     override func viewDidLoad() {
@@ -35,7 +45,7 @@ class TodoListViewController: UITableViewController {
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
         searchBar.delegate = self
-        
+        tableView.rowHeight = 80
         loadItems()
     }
     
@@ -68,6 +78,18 @@ class TodoListViewController: UITableViewController {
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
 
+    }
+    
+    override func deleteData(at indexPath: IndexPath) {
+        guard let deleteItem = self.toDoItems?[indexPath.row] else { return }
+        
+        do {
+            try self.realm.write {
+                self.realm.delete(deleteItem)
+            }
+        } catch {
+            print("Error deleting category, \(error)")
+        }
     }
     
     // MARK: Searching
@@ -130,7 +152,8 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = toDoItems?[indexPath.row] {
             cell.textLabel?.text = item.title

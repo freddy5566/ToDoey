@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B61229C820BAACED00144E68 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61229C720BAACED00144E68 /* SwipeTableViewController.swift */; };
 		B61BA86B20B07B4800878DA3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61BA86A20B07B4800878DA3 /* AppDelegate.swift */; };
 		B61BA87220B07B4800878DA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B61BA87120B07B4800878DA3 /* Assets.xcassets */; };
 		B61BA87520B07B4800878DA3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B61BA87320B07B4800878DA3 /* LaunchScreen.storyboard */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		682451D2C6D06DACF631C9A1 /* Pods-Todoey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Todoey/Pods-Todoey.debug.xcconfig"; sourceTree = "<group>"; };
 		74E1EA4A2CE555EE93A7B220 /* Pods_Todoey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Todoey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B61229C720BAACED00144E68 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		B61BA86720B07B4800878DA3 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B61BA86A20B07B4800878DA3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B61BA87120B07B4800878DA3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 		B61BA86920B07B4800878DA3 /* Todoey */ = {
 			isa = PBXGroup;
 			children = (
+				B61229C720BAACED00144E68 /* SwipeTableViewController.swift */,
 				B61BA86A20B07B4800878DA3 /* AppDelegate.swift */,
 				B6449A8A20B5C4A1007B14A3 /* Category */,
 				B6D2F03C20B2E53400CC865B /* Supporting Files */,
@@ -264,6 +267,7 @@
 				B61BA86B20B07B4800878DA3 /* AppDelegate.swift in Sources */,
 				B6A1F63A20B5C65A00B63C92 /* CategoryCell.swift in Sources */,
 				B6934BFF20B8786C00144131 /* ItemRealm.swift in Sources */,
+				B61229C820BAACED00144E68 /* SwipeTableViewController.swift in Sources */,
 				B6934C0120B8787600144131 /* CategoryRealm.swift in Sources */,
 				B61BA87E20B07D8200878DA3 /* extensions.swift in Sources */,
 				B6D7052D20B5C51300C351BE /* CategoryViewController.swift in Sources */,

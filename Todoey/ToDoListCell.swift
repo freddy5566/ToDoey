@@ -9,7 +9,7 @@
 import UIKit
 import SwipeCellKit
 
-class ToDoListCell: UITableViewCell {
+class ToDoListCell: SwipeTableViewCell {
     
     var toDoItems: String? {
         didSet {
