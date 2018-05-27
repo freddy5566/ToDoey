@@ -14,6 +14,7 @@ class ItemRealm: Object {
     @objc dynamic var title: String = ""
     @objc dynamic var done: Bool = false
     @objc dynamic var createdDate: Date?
+    @objc dynamic var color: String = ""
     
     var parentCetegory = LinkingObjects(fromType: CategoryRealm.self, property: "items")
     
