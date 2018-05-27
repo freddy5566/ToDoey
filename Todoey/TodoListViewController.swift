@@ -32,23 +32,38 @@ class TodoListViewController: SwipeTableViewControllee {
         
         // setup stuff
         tableView.register(ToDoListCell.self, forCellReuseIdentifier: cellID)
-        let textAttributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
-        
-        self.title = "items"
-        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
         
         let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTap))
         
         navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
         navigationItem.rightBarButtonItem = add
-        navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
         
         searchBar.delegate = self
+        
         tableView.rowHeight = 80
         tableView.separatorStyle = .none
         loadItems()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let colorHex = selectedCategory?.color else { return }
+        
+        updateNavBar(withHexCode: colorHex)
+        
+        title = selectedCategory!.name
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        updateNavBar(withHexCode: "1D9BF6")
+        
     }
     
     private let backButton: UIButton = {
@@ -58,6 +73,18 @@ class TodoListViewController: SwipeTableViewControllee {
         button.addTarget(self, action: #selector(backToToDoey(_:)), for: .touchDown)
         return button
     }()
+    
+    // MARK: Nav bar setup
+    private func updateNavBar(withHexCode colorHexCode: String) {
+        guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist. ") }
+        
+        guard let navBarColor = UIColor(hexString: colorHexCode) else { return }
+        
+        navBar.barTintColor = navBarColor
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+         searchBar.barTintColor = navBarColor
+    }
     
     @IBAction private func backToToDoey(_ sender: UIButton) {
         self.navigationController?.popToRootViewController(animated: true)

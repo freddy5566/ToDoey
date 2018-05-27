@@ -32,16 +32,18 @@ class CategoryViewController: SwipeTableViewControllee {
         
         tableView.register(CategoryCell.self, forCellReuseIdentifier: cellID)
         
-        let textAttributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        let textAttributes = [NSAttributedStringKey.foregroundColor: FlatWhite()]
+        navigationController?.navigationBar.largeTitleTextAttributes = textAttributes
         
         self.title = "Todoey"
-        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
+        navigationController?.navigationBar.barTintColor = UIColor(hexString: "1D9BF6")
         
         let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed))
         
         navigationItem.rightBarButtonItem = add
-        navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        navigationItem.rightBarButtonItem?.tintColor = FlatWhite()
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
         
         tableView.rowHeight = 80
         tableView.separatorStyle = .none
@@ -126,11 +128,15 @@ class CategoryViewController: SwipeTableViewControllee {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        let category = categoryArray?[indexPath.row]
         
-        cell.textLabel?.text = category?.name ?? "NO Category Yet"
+        guard let category = categoryArray?[indexPath.row] else { return cell }
+        
+        guard let categoryColor = UIColor(hexString: category.color) else { fatalError()}
+        
+        cell.textLabel?.text = category.name
         cell.backgroundColor = UIColor.randomFlat
-        cell.backgroundColor = UIColor(hexString: category?.color ?? "1D9BF6")
+        cell.backgroundColor = UIColor(hexString: category.color)
+        cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
         
         return cell
     }
