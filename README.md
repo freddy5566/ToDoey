@@ -2,11 +2,11 @@
 
 ## Screenshot
 
-![main](../main.png)
-![inside](../inside.png)
+![main](./main.png)
+![inside](./inside.png)
 
 ## Demo
 
-![main](../add.gif)
-![delete](../delete.gif)
-![inside](../inside.gif)
+![main](./add.gif)
+![delete](./delete.gif)
+![inside](./inside.gif)
